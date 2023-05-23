@@ -17,9 +17,18 @@ router.get("/", async (req, res) => {
   res.status(200).json(cats);
 });
 
-router.get("/:id", (req, res) => {
+router.get("/:id", async (req, res) => {
   // find one category by its `id` value
   // be sure to include its associated Products
+  const cats = await Category.findByPk(req.params.id, {
+    include: [
+      {
+        model: Product,
+      },
+    ],
+  });
+
+  res.status(200).json(cats);
 });
 
 router.post("/", (req, res) => {
@@ -30,8 +39,10 @@ router.put("/:id", (req, res) => {
   // update a category by its `id` value
 });
 
-router.delete("/:id", (req, res) => {
+router.delete("/:id", async (req, res) => {
   // delete a category by its `id` value
+  const cats = await Category.destroy({ where: { id: req.params.id } });
+  res.status(200);
 });
 
 module.exports = router;
